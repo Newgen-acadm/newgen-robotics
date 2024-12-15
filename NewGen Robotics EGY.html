@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)file:///E:/comp/web/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewGen Robotics EGY</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em 0;
+            text-align: center;
+        }
+        .container {
+            margin: 20px;
+        }
+        .course {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #fff;
+            position: relative;
+        }
+        .course img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .course .admin-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .buttons {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .buttons a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .buttons a:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px 0;
+            background-color: #333;
+            color: white;
+        }
+        .social-buttons img {
+            width: 30px;
+            height: 30px;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NewGen Robotics EGY</h1>
+    </header>
+    <div class="container">
+        <!-- Button to view courses -->
+        <div class="buttons">
+            <button onclick="openCoursePage()">View Courses</button>
+        </div>
+        
+        <!-- Courses Section -->
+        <div id="course-section" style="display: block;"><div class="course">
+                    <img src="file:///E:/comp/web/1" alt="Course Image">
+                    <h2>1</h2>
+                    <p>Description: <span class="description">1</span></p>
+                    <p>Price: <span class="price">1</span></p>
+                    <a href="https://m.me/530243990166686" target="_blank">Contact via Messenger</a>
+                    <p>Email/Phone: <input type="text" id="contact-info" placeholder="Enter email or phone"></p>
+                    <button onclick="registerForCourse(this)">Register</button>
+                </div></div>
+
+        <!-- Admin Section -->
+        <div class="buttons" id="admin-section" style="display: block;">
+            <button onclick="addCourse()">Add Course</button>
+            <button onclick="viewOrders()">View Orders</button>
+        </div>
+
+        <!-- Social Media Links -->
+        <div class="social-buttons">
+            <a href="https://www.facebook.com/profile.php?id=61570423835958" target="_blank">
+                <img src="file:///E:/comp/web/facebook-icon.png" alt="Facebook">
+            </a>
+            <a href="https://www.instagram.com/newgen_robotics/" target="_blank">
+                <img src="file:///E:/comp/web/instagram-icon.png" alt="Instagram">
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 NewGen Robotics EGY - Open 24/7</p>
+    </footer>
+
+    <script>
+        const orders = [];
+        const courses = []; // Store courses in memory
+        let isAdmin = false;
+
+        // Prompt for admin password
+        function checkAdminAccess() {
+            const password = prompt("Enter admin password:");
+            if (password === "*newgen*") {
+                isAdmin = true;
+                document.getElementById('admin-section').style.display = 'block'; // Show admin buttons
+                alert("Admin access granted.");
+            } else {
+                isAdmin = false;
+                alert("Access denied. You are not authorized to manage courses.");
+            }
+        }
+
+        // Open course page for all users
+        function openCoursePage() {
+            document.getElementById('course-section').style.display = 'block';
+            displayCourses();
+        }
+
+        // Display all courses
+        function displayCourses() {
+            const courseSection = document.getElementById('course-section');
+            courseSection.innerHTML = ''; // Clear the previous courses
+
+            courses.forEach(course => {
+                const newCourse = document.createElement('div');
+                newCourse.classList.add('course');
+                newCourse.innerHTML = `
+                    <img src="${course.image}" alt="Course Image">
+                    <h2>${course.name}</h2>
+                    <p>Description: <span class="description">${course.description}</span></p>
+                    <p>Price: <span class="price">${course.price}</span></p>
+                    <a href="https://m.me/530243990166686" target="_blank">Contact via Messenger</a>
+                    <p>Email/Phone: <input type="text" id="contact-info" placeholder="Enter email or phone"></p>
+                    <button onclick="registerForCourse(this)">Register</button>
+                `;
+                courseSection.appendChild(newCourse);
+            });
+        }
+
+        // Admin function to add a new course
+        function addCourse() {
+            if (!isAdmin) {
+                alert("You are not authorized to add courses.");
+                return;
+            }
+
+            const courseName = prompt("Enter course name:");
+            const coursePrice = prompt("Enter course price:");
+            const courseDescription = prompt("Enter course description:");
+            const courseImage = prompt("Enter image URL:");
+
+            if (courseName && coursePrice && courseDescription && courseImage) {
+                courses.push({ name: courseName, price: coursePrice, description: courseDescription, image: courseImage });
+                displayCourses();
+            } else {
+                alert("All fields are required!");
+            }
+        }
+
+        // Register for a course
+        function registerForCourse(button) {
+            const contactInfo = button.parentElement.querySelector('#contact-info').value;
+            const courseName = button.parentElement.querySelector('h2').textContent;
+
+            if (contactInfo) {
+                orders.push({ courseName, contactInfo });
+                alert("You have successfully registered for " + courseName);
+            } else {
+                alert("Please enter your email or phone number.");
+            }
+        }
+
+        // View orders for admin only
+        function viewOrders() {
+            if (!isAdmin) {
+                alert("You are not authorized to view orders.");
+                return;
+            }
+
+            if (orders.length === 0) {
+                alert("No orders found.");
+                return;
+            }
+
+            let ordersList = "Orders:\n";
+            orders.forEach((order, index) => {
+                ordersList += `${index + 1}. Course: ${order.courseName}, Contact: ${order.contactInfo}\n`;
+            });
+            alert(ordersList);
+        }
+
+        // Admin functions to edit or delete courses
+        function editCourse(button) {
+            if (!isAdmin) {
+                alert("You are not authorized to edit courses.");
+                return;
+            }
+
+            const courseCard = button.closest('.course');
+            const newName = prompt("Enter new course name:", courseCard.querySelector('h2').textContent);
+            const newPrice = prompt("Enter new course price:", courseCard.querySelector('.price').textContent);
+            const newDescription = prompt("Enter new course description:", courseCard.querySelector('.description').textContent);
+            const newImage = prompt("Enter new image URL:", courseCard.querySelector('img').src);
+
+            if (newName && newPrice && newDescription && newImage) {
+                courseCard.querySelector('h2').textContent = newName;
+                courseCard.querySelector('.price').textContent = newPrice;
+                courseCard.querySelector('.description').textContent = newDescription;
+                courseCard.querySelector('img').src = newImage;
+                alert("Course updated successfully!");
+            } else {
+                alert("All fields are required!");
+            }
+        }
+
+        function deleteCourse(button) {
+            if (!isAdmin) {
+                alert("You are not authorized to delete courses.");
+                return;
+            }
+
+            if (confirm("Are you sure you want to delete this course?")) {
+                const courseCard = button.closest('.course');
+                courseCard.remove();
+                alert("Course deleted successfully!");
+            }
+        }
+
+        // Automatically check admin access once the page loads
+        checkAdminAccess();
+    </script>
+
+
+</body></html>
